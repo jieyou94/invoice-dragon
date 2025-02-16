@@ -1,6 +1,29 @@
 import { Page, Text, Image, View, StyleSheet, Font } from '@react-pdf/renderer';
+import defaultValues from '../../../data/defaultValues';
 
-const Template4 = ({totalAmount, rows, phone, email, logo, notes, currencySymbol, formName, businessName, InvoiceNo, date, clientName, clientAddress, clientCity, clientZipcode, clientPhone, clientEmail, address, city, zipcode, website}) => {
+const Template4 = ({
+  totalAmount = defaultValues.rows[0].amount,
+  rows = defaultValues.rows,
+  phone = defaultValues.phone,
+  email = defaultValues.email,
+  logo = defaultValues.logo,
+  notes = defaultValues.notes,
+  currencySymbol = defaultValues.currencySymbol,
+  formName = defaultValues.formName,
+  businessName = defaultValues.businessName,
+  InvoiceNo = defaultValues.InvoiceNo,
+  date = defaultValues.date,
+  clientName = defaultValues.clientName,
+  clientAddress = defaultValues.clientAddress,
+  clientCity = defaultValues.clientCity,
+  clientZipcode = defaultValues.clientZipcode,
+  clientPhone = defaultValues.clientPhone,
+  clientEmail = defaultValues.clientEmail,
+  address = defaultValues.address,
+  city = defaultValues.city,
+  zipcode = defaultValues.zipcode,
+  website = defaultValues.website
+}) => {
 
   Font.register({
     family: 'Garet',
@@ -54,7 +77,6 @@ const Template4 = ({totalAmount, rows, phone, email, logo, notes, currencySymbol
     bizName: {
       fontSize: '13px',
       color: '#000000',
-      family: 'Garet-Heavy',
     },
     billing__section: {
       fontSize: 11,
@@ -168,9 +190,10 @@ const Template4 = ({totalAmount, rows, phone, email, logo, notes, currencySymbol
           </View>
           <View>
             <View style={styles.header__text}>
-              {formName && <Text style={styles.formName}>{businessName}</Text>}
+              {formName && <Text style={styles.formName}>{formName}</Text>}
             </View>
             <View style={styles.company__info}>
+              {businessName && <Text>{businessName}</Text>}
               {address && <Text>{address}</Text>}
               <View style={styles.address__group}>
                 {city && <Text>{city}</Text>}

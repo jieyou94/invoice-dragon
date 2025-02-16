@@ -15,20 +15,19 @@ import logoP from '../assets/images/placeholder-image.png';
 import Previewed from "../components/Preview/Preview";
 
 import useTranslation from 'next-translate/useTranslation';
-
-
+import defaultValues from '../data/defaultValues';
 
 const Templates = () => {
   const {t, lang} = useTranslation('common')
   // const [service, setService] = useState('invoice');
 
   const [showPreview, setShowPreview] = useState(false);
-  const [formData, setFormData] = useState({formName: 'Invoice'});
-  const [rows, setRows] = useState(Array(1).fill({id: 0, quantity: 1, amount: '0.00'}));
-  const [logo, setLogo] = useState(logoP);
-  const [logoUpdated, setLogoUpdated] = useState(false);
-  const [currencySymbol, setCurrencySymbol] = useState('$');
-  const [currencyCode, setCurrencyCode] = useState('USD');
+  const [formData, setFormData] = useState(defaultValues);
+  const [rows, setRows] = useState(defaultValues.rows);
+  const [logo, setLogo] = useState(defaultValues.logo);
+  const [logoUpdated, setLogoUpdated] = useState(defaultValues.logoUpdated);
+  const [currencySymbol, setCurrencySymbol] = useState(defaultValues.currencySymbol);
+  const [currencyCode, setCurrencyCode] = useState('MYR');
   const [template, setTemplate] = useState(null);
   const [templateSelected, setTemplateSelected] = useState(false);
   const [total, setTotal] = useState(0);
@@ -205,7 +204,7 @@ const Templates = () => {
                   <div>
                     <PDFDownloadLink 
                       document={pdf}
-                      fileName={`${formData.clientName}_${formData.formName}.pdf`}>
+                      fileName={`${formData.clientName}_${formData.InvoiceNo}.pdf`}>
                       {({ blob, url, loading, error }) =>
                         <button className={styles.action__btn} disabled={!showPreview}>{t('download_pdf')}</button> 
                       }

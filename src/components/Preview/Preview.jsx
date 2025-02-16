@@ -5,8 +5,34 @@ import Template1 from "./Templates/Template1";
 import Template2 from "./Templates/Template2";
 import Template3 from "./Templates/Template3";
 import Template4 from "./Templates/Template4";
+import defaultValues from "../../data/defaultValues";
 
-const PDF = ({ template, rows, currencySymbol, formName, logo, logoUpdated, email, businessName, address, city, zipcode, phone, owner, clientName, clientEmail, clientAddress, clientCity, clientZipcode, clientPhone, date, InvoiceNo, website, notes, totalAmount }) => {
+const PDF = ({
+  template,
+  rows = defaultValues.rows,
+  currencySymbol = 'MYR',
+  formName = defaultValues.formName,
+  logo = defaultValues.logo,
+  logoUpdated = defaultValues.logoUpdated,
+  email = defaultValues.email,
+  businessName = defaultValues.businessName,
+  address = defaultValues.address,
+  city = defaultValues.city,
+  zipcode = defaultValues.zipcode,
+  phone = defaultValues.phone,
+  owner = defaultValues.owner,
+  clientName = defaultValues.clientName,
+  clientEmail = defaultValues.clientEmail,
+  clientAddress = defaultValues.clientAddress,
+  clientCity = defaultValues.clientCity,
+  clientZipcode = defaultValues.clientZipcode,
+  clientPhone = defaultValues.clientPhone,
+  date = defaultValues.date,
+  InvoiceNo = defaultValues.InvoiceNo,
+  website = defaultValues.website,
+  notes = defaultValues.notes,
+  totalAmount = 0
+}) => {
 
   return (
     <Document
@@ -124,7 +150,31 @@ const PDF = ({ template, rows, currencySymbol, formName, logo, logoUpdated, emai
   );
 }
 
-const PDFView = ({ template, rows, currencySymbol, formName, logo, logoUpdated, email, businessName, address, city, zipcode, phone, owner, clientName, clientAddress, clientEmail, clientCity, clientZipcode, clientPhone, date, InvoiceNo, website, notes }) => {
+const PDFView = ({
+  template,
+  rows = defaultValues.rows,
+  currencySymbol = 'MYR',
+  formName = defaultValues.formName,
+  logo = defaultValues.logo,
+  logoUpdated = defaultValues.logoUpdated,
+  email = defaultValues.email,
+  businessName = defaultValues.businessName,
+  address = defaultValues.address,
+  city = defaultValues.city,
+  zipcode = defaultValues.zipcode,
+  phone = defaultValues.phone,
+  owner = defaultValues.owner,
+  clientName = defaultValues.clientName,
+  clientAddress = defaultValues.clientAddress,
+  clientEmail = defaultValues.clientEmail,
+  clientCity = defaultValues.clientCity,
+  clientZipcode = defaultValues.clientZipcode,
+  clientPhone = defaultValues.clientPhone,
+  date = defaultValues.date,
+  InvoiceNo = defaultValues.InvoiceNo,
+  website = defaultValues.website,
+  notes = defaultValues.notes
+}) => {
 
   const [client, setClient] = useState(false);
 
@@ -132,28 +182,38 @@ const PDFView = ({ template, rows, currencySymbol, formName, logo, logoUpdated, 
     setClient(true);
   }, []);
 
-  const [totalAmount, setTotalAmount] = useState(null);
+  const [inputRows, setInputRows] = useState(rows);
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  const handleTotalCalculation = () => {
+  useEffect(() => {
+    setInputRows(() => rows);
+    handleTotalCalculation(rows);
+  }, [rows]);
+
+  const handleInputChange = (index, field, value) => {
+    const newRows = [...inputRows];
+    newRows[index][field] = value;
+    newRows[index].amount = newRows[index].quantity * newRows[index].rate;
+    setInputRows(newRows);
+    handleTotalCalculation(newRows);
+  };
+
+  const handleTotalCalculation = (rows) => {
     let sum = 0;
     rows.forEach(row => {
       sum += parseFloat(row.amount);
-    })
-    setTotalAmount(numberWithCommas(sum.toFixed(2)))
-  }
+    });
+    setTotalAmount(numberWithCommas(sum.toFixed(2)));
+  };
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  useEffect(() => {
-    handleTotalCalculation();
-  }, [])
-
   const pdf = (
     <PDF
       template={template}
-      rows={rows}
+      rows={inputRows}
       email={email}
       businessName={businessName}
       formName={formName}
@@ -184,6 +244,7 @@ const PDFView = ({ template, rows, currencySymbol, formName, logo, logoUpdated, 
       <PDFViewer className={styles.full}>
         {pdf}
       </PDFViewer>
+     
     </>
   );
 }
